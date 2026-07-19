@@ -32,6 +32,29 @@ Upstream / original sources:
   file reference.
 - Adapting the tracked spell/ability list and class handling for the new
   Conquest of Azeroth classes and abilities (ongoing).
+- Extended the anchor system to attach icons to additional unit-frame addons
+  (see below), with a hardened resolver that can never error on a missing
+  addon, frame, or portrait element.
+
+## Supported unit frames
+
+Icons can be anchored to the default Blizzard frames, Perl, and X-Perl (as in
+the original), plus the following, added for LoseControlCoA:
+
+- **PitBull4** — player, target, focus
+- **ElvUI** — player, target, focus, arena1-5
+- **ShadowedUnitFrames (SUF)** — player, target, focus, arena1-5
+- **Gladius** — arena1-5
+- **GladiusEx** — party1-4, arena1-5
+- **sArena** — arena1-5
+
+Party frames beyond party1-4 (e.g. "player-in-party" layouts) and raid /
+nameplate anchoring are not supported on the 3.3.5-era client and are
+intentionally left out. Anchoring resolution is fail-safe: if an addon isn't
+loaded or a frame doesn't exist, the icon simply falls back to the screen
+centre instead of raising an error. sArena's frame naming varies between forks;
+the resolver probes the common patterns, so if your build isn't detected, add
+its frame name to the `sArenaFrame` candidates list in `LoseControlCoA.lua`.
 
 ## Installation
 

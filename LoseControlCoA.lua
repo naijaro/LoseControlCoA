@@ -195,6 +195,80 @@ for k, v in pairs(spellIds) do
 end
 
 -------------------------------------------------------------------------------
+-- Anchor resolution helpers (hardened: they never raise, always return a
+-- frame/region or nil, and callers fall back to UIParent on nil).
+--
+-- An anchor entry may be either:
+--   * a string   -> the name of a global frame/region, resolved via _G
+--   * a function -> called at resolve time (wrapped in pcall) returning a
+--                   frame/region or nil. Used for addons that need runtime
+--                   logic (PitBull4 localized names, sArena's varied naming).
+
+-- Returns a closure that resolves _G[frameName] and, if present, its sub-element
+-- (e.g. a "portrait"/"Portrait" child); otherwise the frame itself; else nil.
+local function PortraitOrFrame(frameName, subKey)
+	return function()
+		local base = _G[frameName]
+		if type(base) ~= "table" then return nil end
+		if subKey then
+			local sub = base[subKey]
+			if type(sub) == "table" then return sub end
+		end
+		return base
+	end
+end
+
+-- PitBull4 names its unit frames "PitBull4_Frames_<LocalizedUnitName>", where the
+-- localized name comes from AceLocale. Every step is guarded, so a missing lib,
+-- missing locale, or missing entry can never raise (no nil concatenation).
+local function PitBull4Frame(localeKey, wantPortrait)
+	return function()
+		if type(LibStub) ~= "table" then return nil end -- LibStub is a callable table, not a function
+		local AceLocale = LibStub("AceLocale-3.0", true)
+		if type(AceLocale) ~= "table" then return nil end
+		local ok, L = pcall(AceLocale.GetLocale, AceLocale, "PitBull4", true)
+		if not ok or type(L) ~= "table" then return nil end
+		local ok2, unitName = pcall(function() return L[localeKey] end)
+		if not ok2 or type(unitName) ~= "string" then return nil end
+		local f = _G["PitBull4_Frames_" .. unitName]
+		if type(f) ~= "table" then return nil end
+		if wantPortrait and type(f.Portrait) == "table" then return f.Portrait end
+		return f
+	end
+end
+
+-- sArena forks are inconsistent: some expose global frames, newer (WoD-based)
+-- builds keep them only in an internal table. Probe both, fully guarded. If your
+-- build uses a different global name, add it to the `candidates` list below.
+local function sArenaFrame(i)
+	local function pick(f)
+		if type(f) ~= "table" then return nil end
+		if type(f.classPortrait) == "table" then return f.classPortrait end
+		if type(f.Portrait) == "table" then return f.Portrait end
+		if type(f.portrait) == "table" then return f.portrait end
+		return f
+	end
+	return function()
+		local core = _G["sArena"]
+		if type(core) == "table" and type(core.unitFrames) == "table" then
+			local hit = pick(core.unitFrames[i])
+			if hit then return hit end
+		end
+		local candidates = {
+			"sArenaEnemyFrame" .. i,
+			"sArenaFrame" .. i,
+			"sArenaUnitFrame" .. i,
+			"sArena_UnitFrame" .. i,
+		}
+		for _, name in ipairs(candidates) do
+			local hit = pick(_G[name])
+			if hit then return hit end
+		end
+		return nil
+	end
+end
+
+-------------------------------------------------------------------------------
 -- Global references for attaching icons to various unit frames
 local anchors = {
 	None = {}, -- empty but necessary
@@ -230,8 +304,84 @@ local anchors = {
 		party3 = "XPerl_party3portraitFrameportrait",
 		party4 = "XPerl_party4portraitFrameportrait",
 	},
+	-- ----------------------------------------------------------------------
+	-- Added for LoseControlCoA. Party frames are intentionally limited to
+	-- what the 3.3.5 API exposes; any unsupported unit simply resolves to
+	-- nil and the icon falls back to the screen centre (never an error).
+	PitBull4 = {
+		player = PitBull4Frame("Player", true),
+		target = PitBull4Frame("Target", true),
+		focus  = PitBull4Frame("Focus",  true),
+	},
+	ElvUI = {
+		player = PortraitOrFrame("ElvUF_Player", "Portrait"),
+		target = PortraitOrFrame("ElvUF_Target", "Portrait"),
+		focus  = PortraitOrFrame("ElvUF_Focus",  "Portrait"),
+		arena1 = PortraitOrFrame("ElvUF_Arena1", "Portrait"),
+		arena2 = PortraitOrFrame("ElvUF_Arena2", "Portrait"),
+		arena3 = PortraitOrFrame("ElvUF_Arena3", "Portrait"),
+		arena4 = PortraitOrFrame("ElvUF_Arena4", "Portrait"),
+		arena5 = PortraitOrFrame("ElvUF_Arena5", "Portrait"),
+	},
+	SUF = {	-- ShadowedUnitFrames
+		player = PortraitOrFrame("SUFUnitplayer", "portrait"),
+		target = PortraitOrFrame("SUFUnittarget", "portrait"),
+		focus  = PortraitOrFrame("SUFUnitfocus",  "portrait"),
+		arena1 = PortraitOrFrame("SUFHeaderarenaUnitButton1", "portrait"),
+		arena2 = PortraitOrFrame("SUFHeaderarenaUnitButton2", "portrait"),
+		arena3 = PortraitOrFrame("SUFHeaderarenaUnitButton3", "portrait"),
+		arena4 = PortraitOrFrame("SUFHeaderarenaUnitButton4", "portrait"),
+		arena5 = PortraitOrFrame("SUFHeaderarenaUnitButton5", "portrait"),
+	},
+	Gladius = {
+		arena1 = "GladiusClassIconFramearena1",
+		arena2 = "GladiusClassIconFramearena2",
+		arena3 = "GladiusClassIconFramearena3",
+		arena4 = "GladiusClassIconFramearena4",
+		arena5 = "GladiusClassIconFramearena5",
+	},
+	GladiusEx = {
+		party1 = "GladiusExClassIconFrameparty1",
+		party2 = "GladiusExClassIconFrameparty2",
+		party3 = "GladiusExClassIconFrameparty3",
+		party4 = "GladiusExClassIconFrameparty4",
+		arena1 = "GladiusExClassIconFramearena1",
+		arena2 = "GladiusExClassIconFramearena2",
+		arena3 = "GladiusExClassIconFramearena3",
+		arena4 = "GladiusExClassIconFramearena4",
+		arena5 = "GladiusExClassIconFramearena5",
+	},
+	sArena = {
+		arena1 = sArenaFrame(1),
+		arena2 = sArenaFrame(2),
+		arena3 = sArenaFrame(3),
+		arena4 = sArenaFrame(4),
+		arena5 = sArenaFrame(5),
+	},
 	-- more to come here?
 }
+
+-- Resolve an anchor entry (string global name or function) to a frame/region.
+-- Always returns a frame/region or nil; never raises.
+local function GetAnchorFrame(profileName, unitId)
+	local profile = anchors[profileName]
+	if type(profile) ~= "table" then return nil end
+	local entry = profile[unitId]
+	local t = type(entry)
+	if t == "string" then
+		local f = _G[entry]
+		if type(f) == "table" then return f end
+		return nil
+	elseif t == "function" then
+		local ok, result = pcall(entry, unitId)
+		if ok and type(result) == "table" then return result end
+		return nil
+	end
+	return nil
+end
+
+-- Order the anchor profiles appear in the options dropdown.
+local anchorOrder = { "Blizzard", "Perl", "XPerl", "PitBull4", "ElvUI", "SUF", "Gladius", "GladiusEx", "sArena" }
 
 -------------------------------------------------------------------------------
 -- Default settings
@@ -368,7 +518,7 @@ LoseControl:RegisterEvent("ADDON_LOADED")
 function LoseControl:PLAYER_ENTERING_WORLD() -- this correctly anchors enemy arena frames that aren't created until you zone into an arena
 	self.frame = LoseControlDB.frames[self.unitId] -- store a local reference to the frame's settings
 	local frame = self.frame
-	self.anchor = _G[anchors[frame.anchor][self.unitId]] or UIParent
+	self.anchor = GetAnchorFrame(frame.anchor, self.unitId) or UIParent
 
 	self:SetParent(self.anchor:GetParent()) -- or LoseControl) -- If Hide() is called on the parent frame, its children are hidden too. This also sets the frame strata to be the same as the parent's.
 	--self:SetFrameStrata(frame.strata or "LOW")
@@ -450,18 +600,26 @@ function LoseControl:UNIT_AURA(unitId) -- fired when a (de)buff is gained/lost
 
 	if maxExpirationTime == 0 then -- no (de)buffs found
 		self.maxExpirationTime = 0
-		if self.anchor ~= UIParent and self.drawlayer then
-			self.anchor:SetDrawLayer(self.drawlayer) -- restore the original draw layer
+		if self.anchor ~= UIParent and self.drawlayer and self.anchor.SetDrawLayer then
+			self.anchor:SetDrawLayer(self.drawlayer) -- restore the original draw layer (textures only)
 		end
 		self:Hide()
 	elseif maxExpirationTime ~= self.maxExpirationTime then -- this is a different (de)buff, so initialize the cooldown
 		self.maxExpirationTime = maxExpirationTime
 		if self.anchor ~= UIParent then
-			self:SetFrameLevel(self.anchor:GetParent():GetFrameLevel()) -- must be dynamic, frame level changes all the time
-			if not self.drawlayer then
-				self.drawlayer = self.anchor:GetDrawLayer() -- back up the current draw layer
+			local parent = self.anchor:GetParent()
+			if parent then
+				self:SetFrameLevel(parent:GetFrameLevel()) -- must be dynamic, frame level changes all the time
 			end
-			self.anchor:SetDrawLayer("BACKGROUND") -- Temporarily put the portrait texture below the debuff texture. This is the only reliable method I've found for keeping the debuff texture visible with the cooldown spiral on top of it.
+			-- The draw-layer swap only applies to textures/regions that support
+			-- it. Frames (e.g. Gladius icons) and 3D portrait models do not, so
+			-- guard against calling nil methods.
+			if self.anchor.GetDrawLayer and self.anchor.SetDrawLayer then
+				if not self.drawlayer then
+					self.drawlayer = self.anchor:GetDrawLayer() -- back up the current draw layer
+				end
+				self.anchor:SetDrawLayer("BACKGROUND") -- put the portrait texture below the debuff texture so the cooldown spiral stays visible on top
+			end
 		end
 		if self.frame.anchor == "Blizzard" then
 			SetPortraitToTexture(self.texture, Icon) -- Sets the texture to be displayed from a file applying a circular opacity mask making it look round like portraits. TO DO: mask the cooldown frame somehow so the corners don't stick out of the portrait frame. Maybe apply a circular alpha mask in the OVERLAY draw layer.
@@ -494,7 +652,7 @@ function LoseControl:StopMoving()
 			UIDropDownMenu_SetSelectedValue(AnchorDropDown, "None") -- update the drop down to show that the frame has been detached from the anchor
 		end
 	end
-	self.anchor = _G[anchors[frame.anchor][self.unitId]] or UIParent
+	self.anchor = GetAnchorFrame(frame.anchor, self.unitId) or UIParent
 	self:StopMovingOrSizing()
 end
 
@@ -568,7 +726,7 @@ function Unlock:OnClick()
 		end
 		for k, v in pairs(LC) do
 			local frame = LoseControlDB.frames[k]
-			if frame.enabled and (_G[anchors[frame.anchor][k]] or frame.anchor == "None") then -- only unlock frames whose anchor exists
+			if frame.enabled and (GetAnchorFrame(frame.anchor, k) or frame.anchor == "None") then -- only unlock frames whose anchor exists
 				v:UnregisterEvent("UNIT_AURA")
 				v:UnregisterEvent("PLAYER_FOCUS_CHANGED")
 				v:UnregisterEvent("PLAYER_TARGET_CHANGED")
@@ -702,7 +860,7 @@ function AnchorDropDown:OnClick()
 		frame.y = nil
 	end
 
-	icon.anchor = _G[anchors[frame.anchor][unit]] or UIParent
+	icon.anchor = GetAnchorFrame(frame.anchor, unit) or UIParent
 
 	if not Unlock:GetChecked() then -- prevents the icon from disappearing if the frame is currently hidden
 		icon:SetParent(icon.anchor:GetParent())
@@ -720,9 +878,15 @@ end
 function AnchorDropDown:initialize() -- called from OptionsPanel.refresh() and every time the drop down menu is opened
 	local unit = UIDropDownMenu_GetSelectedValue(UnitDropDown)
 	AddItem(self, LOSECONTROL["None"], "None")
-	AddItem(self, "Blizzard", "Blizzard")
-	if _G[anchors["Perl"][unit]] then AddItem(self, "Perl", "Perl") end
-	if _G[anchors["XPerl"][unit]] then AddItem(self, "XPerl", "XPerl") end
+	-- List every anchor profile that defines a mapping for the selected unit.
+	-- (Based on the profile definition, not live frame existence, so arena
+	-- addons like Gladius/sArena stay selectable even outside an arena.)
+	for _, name in ipairs(anchorOrder) do
+		local profile = anchors[name]
+		if type(profile) == "table" and profile[unit] ~= nil then
+			AddItem(self, name, name)
+		end
+	end
 end
 
 local StrataDropDownLabel = OptionsPanel:CreateFontString(O.."StrataDropDownLabel", "ARTWORK", "GameFontNormal")
