@@ -1,0 +1,22 @@
+## Interface: 30300
+## Title: LoseControlCoA
+## Author: MaxQuest/Naijaro (based on LoseControl by Kouri)
+## Version: 3.34
+## Notes: Displays the duration of CC effects on your character. Adapted for Ascension WoW Conquest of Azeroth (21 new classes and abilities).
+## Notes-deDE: Zeigt die Dauer der CC-Effekte auf Ihren Buchstaben an
+## Notes-esES: Exhibe la duración de los efectos del CC sobre su carácter
+## Notes-esMX: Exhibe la duración de los efectos del CC sobre su carácter
+## Notes-frFR: Montre la durée des effets de CC sur votre caractère
+## Notes-koKR: 당신의 특성에 대한 CC 효력의 내구를 표시한다
+## Notes-ruRU: Показывает продолжительность влияний CC на вашем характере
+## Notes-zhCN: 显示被控制的剩余时间
+## Notes-zhTW: 顯示被控制的剩餘時間
+## X-eMail: kouri@kouri.org
+## X-Website: https://github.com/naijaro/LoseControlCoA
+## X-License: GPLv3 (see LICENSE.txt)
+## X-Credits: Original addon by Kouri (Kouri86); GPLv3 fork by millanzarreta
+## X-Category: Buffs
+## SavedVariablesPerCharacter: LoseControlDB
+
+localization.lua
+LoseControlCoA.lua
