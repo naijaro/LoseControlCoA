@@ -18,5 +18,6 @@
 ## X-Category: Buffs
 ## SavedVariablesPerCharacter: LoseControlDB
 
+Libs\LibStub\LibStub.lua
 localization.lua
 LoseControlCoA.lua
