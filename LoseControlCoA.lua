@@ -184,6 +184,212 @@ local spellIds = {
 	[63276] = "PvE",	-- Mark of the Faceless (General Vezax)
 	[66770] = "PvE",	-- Ferocious Butt (Icehowl)
 }
+-- ---------------------------------------------------------------------------
+-- Conquest of Azeroth crowd-control abilities (21 custom CoA classes).
+-- Generated from db.ascension.gg. Each CoA mechanic is folded into this
+-- addon's existing categories: ROOT->Root, SILENCE->Silence, DISARM->Disarm,
+-- and every "cannot act" mechanic (stun, fear, incap, disorient, poly, horror,
+-- charm, banish, sleep, freeze) -> CC, matching how the base list already
+-- classifies fears, polymorphs, banishes and the like.
+-- These IDs only exist on the CoA realm; on WotLK/Bronzebeard GetSpellInfo
+-- returns nil for them and they are skipped silently (see the loop below).
+local spellIdsForCoA = {
+	-- Barbarian
+	[520523] = "CC",	      -- Headbutt (STUN)  -- 4s stun on 40s cd
+	[560532] = "CC",	      -- Skull Smash (DISORIENT)  -- 8s disorient on 2 min cd
+
+	-- Bloodmage
+	[281190] = "CC",        -- Hemostasis (HORROR)
+	[681304] = "CC",        -- Hemostasis (HORROR)
+	[801074] = "CC",	      -- Scarlet Delirium (FEAR)
+	[804198] = "CC",	      -- Terrify (HORROR) -- horror on 2 min cd -- OBSOLETE?
+
+	-- Chronomancer
+	[280795] = "Disarm",    -- Desynchronization (DISARM)
+	[561310] = "Disarm",    -- Desynchronization (DISARM)
+	[706056] = "CC",        -- Slipstream (BANISH)
+	[801280] = "CC",        -- Buy Time (STUN) -- 10s aoe stun on 2 min cd -- OBSOLETE!
+	[804461] = "CC",	      -- Babify (POLY)
+	[805162] = "CC",        -- Breath of Time (INCAP) -- 3s incapacitate on 30s cd -- OBSOLETE?
+	[805847] = "Root",      -- Clasp of Infinity (ROOT)
+
+	-- Cultist
+	[560109] = "CC",        -- Corrupt Mind (FEAR)
+	[560110] = "CC",        -- Madness (FEAR)
+	[560963] = "CC",        -- Shackle The Unrepentant (BANISH)
+	[805114] = "CC",	      -- Mass Nightmare (HORROR)  -- 5s aoe horror, on 3 min cd
+	[805235] = "CC",        -- Whispers of the Pit (FEAR)
+
+	-- Felsworn
+	[503142] = "Root",      -- Hellhaul (ROOT)
+	[503143] = "Root",      -- Hellhaul (ROOT)
+	[503144] = "Root",      -- Hellhaul (ROOT)
+	[503145] = "Root",      -- Hellhaul (ROOT)
+	[503146] = "Root",      -- Hellhaul (ROOT)
+	[503147] = "Root",      -- Hellhaul (ROOT)
+	[503148] = "Root",      -- Hellhaul (ROOT)
+	[804168] = "CC",        -- Hellbound Leash (CHARM)
+
+	-- Guardian
+	[501546] = "CC",        -- Battle Rush (STUN)  -- charge with 1s stun on 30s cd
+	[501547] = "CC",        -- Battle Rush (STUN)
+	[501548] = "CC",        -- Battle Rush (STUN)
+	[802197] = "CC",        -- Battle Rush (STUN)
+	[704418] = "Silence",   -- Hammer of the Law (SILENCE) -- 3s cone silence on 40s cd
+	[801828] = "CC",	      -- Vanguard X-173: Onslaught (STUN) -- 3s cone stun on 20s cd
+	[802304] = "Root",	    -- Net Throw (ROOT) -- 4s root on 20s cd
+
+	-- Knight of Xoroth
+	[503361] = "Silence",   -- Chainwhip (SILENCE)
+	[503362] = "Silence",   -- Chainwhip (SILENCE)
+	[503363] = "Silence",   -- Chainwhip (SILENCE)
+	[503364] = "Silence",   -- Chainwhip (SILENCE)
+	[503365] = "Silence",   -- Chainwhip (SILENCE)
+	[503366] = "Silence",   -- Chainwhip (SILENCE)
+	[503367] = "Silence",   -- Chainwhip (SILENCE)
+	[800081] = "Silence",   -- Chainwhip (SILENCE)
+	[803185] = "CC",        -- Chains of Malice (STUN)  -- 5s stun on 1 min cd
+
+	-- Necromancer
+	[500326] = "Root",      -- Bonefreeze (ROOT) (Freeze in place)
+	[500341] = "CC",	      -- Entomb (DISORIENT)
+	[800706] = "CC",        -- Ghoulify (FEAR)
+	[803741] = "CC",        -- Mass Grave (FEAR)
+	[280475] = "CC",        -- Mass Grave (FEAR)
+
+	[501983] = "Root",	    -- Black Ice (ROOT) -- was it removed from Necromancer? -- OBSOLETE?
+	[501984] = "Root",	    -- Black Ice (ROOT)
+	[501985] = "Root",	    -- Black Ice (ROOT)
+	[501986] = "Root",	    -- Black Ice (ROOT)
+	[501987] = "Root",	    -- Black Ice (ROOT)
+	[501988] = "Root",	    -- Black Ice (ROOT)
+	[501989] = "Root",	    -- Black Ice (ROOT)
+	[501990] = "Root",	    -- Black Ice (ROOT)
+	[501991] = "Root",	    -- Black Ice (ROOT)
+	[801746] = "Root",	    -- Black Ice (ROOT) -- effect
+
+	-- Primalist	
+	[800145] = "CC",	      -- Grip (INCAP) -- 8s incapacitate, 1.5s cast
+
+	-- Pyromancer
+	[535505] = "Root",	    -- Cindergrip (ROOT)  -- 1.5s cast root
+	[535506] = "Root",	    -- Cindergrip (ROOT)
+	[535507] = "Root",	    -- Cindergrip (ROOT)
+	[535508] = "Root",	    -- Cindergrip (ROOT)
+	[805476] = "Root",	    -- Cindergrip (ROOT)  -- effect?
+
+	[806148] = "CC",        -- Gaze of Ysera (SLEEP)
+	[502088] = "CC",        -- Petrifying Visage (HORROR)  -- 3s stunning horror on 2 min cd
+	[502089] = "CC",        -- Petrifying Visage (HORROR)
+	[502090] = "CC",        -- Petrifying Visage (HORROR)
+	[801908] = "CC",        -- Petrifying Visage (HORROR)
+	
+
+	-- Ranger
+	[804936] = "CC",	      -- Ambuscade (STUN)  -- death grip the target and stun for 3s, on 1 min cd
+
+	-- Reaper
+	[500355] = "CC",	      -- Mark of Terror (FEAR)     -- 5s fear on 30s cd
+	[504014] = "CC",        -- Soulslam (HORROR)         -- 3s horror on 45s cd
+	[803989] = 'CC',        -- Soul Shock (INCAP)        -- 8s sap
+	[802086] = 'CC',        -- Mind Screech (SILENCE)    -- 3.5s silence, applied by Shrieking Scythe (with talent)
+	[806146] = 'CC',        -- Ghastly Screech (SILENCE) -- 4s aoe silence on 1 min cd
+
+	-- Runemaster
+	[503423] = "CC",        -- Inscription: Permafrost (INCAP) -- incapacitate for 8s on 1 min cd; cd reduced to 0 during stealth/runeshroud
+	[503424] = "CC",        -- Inscription: Permafrost (INCAP)
+	[503425] = "CC",        -- Inscription: Permafrost (INCAP)
+	[503426] = "CC",        -- Inscription: Permafrost (INCAP)
+	[503427] = "CC",        -- Inscription: Permafrost (INCAP)
+	[503428] = "CC",        -- Inscription: Permafrost (INCAP)
+	[503429] = "CC",        -- Inscription: Permafrost (INCAP)
+	[503430] = "CC",        -- Inscription: Permafrost (INCAP)
+	[503431] = "CC",        -- Inscription: Permafrost (INCAP)
+	[804060] = "CC",        -- Permafrost Rune (INCAP) -- incapacitate for 10s on 1 min cd; cd reduced by 80% during stealth/runeshroud
+  [502634] = "CC",	      -- Everfrost Scroll (STUN) -- stun for 3.5s on 1 min cd
+	[502635] = "CC",	      -- Everfrost Scroll (STUN)
+	[502636] = "CC",	      -- Everfrost Scroll (STUN)
+	[502637] = "CC",	      -- Everfrost Scroll (STUN)
+	[502638] = "CC",	      -- Everfrost Scroll (STUN)
+	[502639] = "CC",	      -- Everfrost Scroll (STUN)
+	[502640] = "CC",	      -- Everfrost Scroll (STUN)
+	[502641] = "CC",	      -- Everfrost Scroll (STUN)
+	[502642] = "CC",	      -- Everfrost Scroll (STUN)
+
+	-- Starcaller
+	[804738] = "CC",        -- Siren's Song (CHARM)
+	[503012] = "Silence",   -- Slipstream (SILENCE)    -- self silence for 5s + aoe heal, on 15s cd
+	[503013] = "Silence",   -- Slipstream (SILENCE)
+	[503014] = "Silence",   -- Slipstream (SILENCE)
+	[503015] = "Silence",   -- Slipstream (SILENCE)
+	[503016] = "Silence",   -- Slipstream (SILENCE)
+	[503017] = "Silence",   -- Slipstream (SILENCE)
+	[503018] = "Silence",   -- Slipstream (SILENCE)
+	[800366] = "Silence",   -- Slipstream (SILENCE)
+	[801135] = "CC",	      -- Starshatter (STUN)      -- inline 5s stun, on 1 min cd
+	[805546] = "CC",	      -- Moonlit Slumber (SLEEP) -- 6s sleep, on 1 min cd
+	[806156] = "Silence",	  -- Astral Armor (SILENCE)  -- 3s silence
+
+	-- Stormbringer
+	[707044] = "CC",	      -- Storm Alert (FEAR) -- 8s fear with 2.0s cast
+	[707905] = "CC",	      -- Storm Alert (FEAR) -- 8s fear with 1.8s cast
+	[707906] = "CC",	      -- Storm Alert (FEAR) -- 8s fear with 1.7s cast
+	[801871] = "Root",	    -- Thunder Prison Unused (ROOT)
+
+	-- Sun Cleric
+	[805583] = "CC",        -- Glare (STUN)   -- 5s aoe stun on 2 min cd
+	[560764] = "CC",	      -- Celestial Impact (INCAP)  -- OBSOLETE?
+
+	-- Templar
+	[560116] = "Silence",	  -- Interdict (SILENCE)   -- 6s silence on 2 min cd -- undead and demons also cannot be healed
+	[806121] = "CC",        -- Judgement Day (INCAP)
+
+	-- Tinker
+	[804861] = "Silence",	  -- Anti-Magic Grenades (SILENCE) -- aoe silence for 4s, on 2 min cd, also dispells 3 beneficial magic effects
+	[806173] = "CC",	      -- Drill Smash (STUN) -- 4s stun, on 30s cd
+
+	-- Venomancer
+	[504335] = "Snare",	    -- Web Wrap (STUN)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase)
+	[504362] = "CC",	      -- Fungify (CHARM)    -- mix of Mind Control and succubus' Seduction, but 1.5s cast instead of channel -- OBSOLETE?
+	[502890] = "Root",      -- Spindlebind (ROOT) -- 4s root on 16s cd
+	[502891] = "Root",      -- Spindlebind (ROOT)
+	[502892] = "Root",      -- Spindlebind (ROOT)
+	[502893] = "Root",      -- Spindlebind (ROOT)
+	[502894] = "Root",      -- Spindlebind (ROOT)
+	[502895] = "Root",      -- Spindlebind (ROOT)
+	[800887] = "Root",      -- Spindlebind (ROOT)
+	[800877] = "CC",        -- Shadra's Binding (STUN)
+	
+	[704235] = "Disarm",	  -- Pinch (DISARM) -- disarm for 5s on 1 min cd
+	[804967] = "Root",	    -- Venocannon (ROOT) -- self root on 1 min cd -- OBSOLETE?
+
+	-- Witch Doctor
+	[803678] = "Silence",   -- Malignant Jinx (SILENCE)
+	[803732] = "Silence",   -- Malignant Jinx (SILENCE)
+	[280056] = "Silence",   -- Malignant Jinx (SILENCE)
+	[500952] = "CC",        -- Amphibimorph (POLY)
+	[801665] = "Root",      -- Big Bad Voodoo (ROOT)
+
+	-- Witch Hunter
+  [500089] = "Silence",   -- Subjugate (SILENCE) -- 4s silence and 40% ms slow, on 1 min cd
+	[802139] = "CC",	      -- Darkslayer's Lantern (STUN) -- 5s aoe stun, on 2 min cd
+	[805756] = "CC",	      -- Smoke Grenade (SNARE) -- 8s snare and inability to target in and out of cloud, on 2 min cd
+
+  -- Other
+	[800013] = "CC",	      -- Facehug (STUN) -- 3s stun on 1 min cd -- MINDBENDER?
+	[800354] = "CC",	      -- Enslave (POLY) -- 8s poly with 1.7s cast -- MINDBENDER?
+
+	[800950] = "Silence",	  -- Deathmatch (SILENCE) -- banish self and target for 6s on 1 min cd
+	[803531] = "Silence",	  -- Deathmatch (SILENCE) -- banish self and target for 6s on 1 min cd
+}
+
+-- Merge the CoA abilities into the main spellIds table so a single lookup
+-- table covers both WotLK and Conquest of Azeroth. (CoA IDs are 500000+ and
+-- never collide with the original sub-70000 IDs, so nothing is overwritten.)
+for k, v in pairs(spellIdsForCoA) do
+	spellIds[k] = v
+end
+
 local abilities = {} -- localized names are saved here
 for k, v in pairs(spellIds) do
 	local name = GetSpellInfo(k)
@@ -192,6 +398,10 @@ for k, v in pairs(spellIds) do
 	else -- Thanks to inph for this idea. Keeps things from breaking when Blizzard changes things.
 		log(L .. " unknown spellId: " .. k)
 	end
+	-- If GetSpellInfo returns nil, this spellId does not exist on the current
+	-- client (e.g. a Conquest of Azeroth spell on a WotLK/Bronzebeard realm, or
+	-- vice versa). Skip it silently so the same addon runs clean -- no errors,
+	-- no chat spam -- on all three supported realms.
 end
 
 -------------------------------------------------------------------------------
