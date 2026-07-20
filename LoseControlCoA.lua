@@ -518,10 +518,36 @@ local anchors = {
 	-- Added for LoseControlCoA. Party frames are intentionally limited to
 	-- what the 3.3.5 API exposes; any unsupported unit simply resolves to
 	-- nil and the icon falls back to the screen centre (never an error).
-	PitBull4 = {
+	-- PitBull4 has three profiles:
+	--   _Auto      : resolves the frame via AceLocale at runtime (portrait).
+	--                Works across locales/versions but depends on PitBull4 naming.
+	--   _Hardcoded : fixed global frame names verified in-game on this build
+	--                (note the lowercase "Pitbull4" prefix on this client).
+	--   _Portraits : the 3D portrait models. Numbering (_1.._7) follows PitBull4
+	--                frame creation order (player, target, focus, party1-4); if you
+	--                reconfigure PitBull4 frames these indices may shift.
+	PitBull4_Auto = {
 		player = PitBull4Frame("Player", true),
 		target = PitBull4Frame("Target", true),
 		focus  = PitBull4Frame("Focus",  true),
+	},
+	PitBull4_Hardcoded = {
+		player = "Pitbull4_Frames_player",
+		target = "Pitbull4_Frames_target",
+		focus  = "Pitbull4_Frames_focus",
+		party1 = "Pitbull4_Groups_PartyUnitButton1",
+		party2 = "Pitbull4_Groups_PartyUnitButton2",
+		party3 = "Pitbull4_Groups_PartyUnitButton3",
+		party4 = "Pitbull4_Groups_PartyUnitButton4",
+	},
+	PitBull4_Portraits = {
+		player = "Pitbull4_PlayerModel_1",
+		target = "Pitbull4_PlayerModel_2",
+		focus  = "Pitbull4_PlayerModel_3",
+		party1 = "Pitbull4_PlayerModel_4",
+		party2 = "Pitbull4_PlayerModel_5",
+		party3 = "Pitbull4_PlayerModel_6",
+		party4 = "Pitbull4_PlayerModel_7",
 	},
 	ElvUI = {
 		player = PortraitOrFrame("ElvUF_Player", "Portrait"),
@@ -591,7 +617,7 @@ local function GetAnchorFrame(profileName, unitId)
 end
 
 -- Order the anchor profiles appear in the options dropdown.
-local anchorOrder = { "Blizzard", "Perl", "XPerl", "PitBull4", "ElvUI", "SUF", "Gladius", "GladiusEx", "sArena" }
+local anchorOrder = { "Blizzard", "Perl", "XPerl", "PitBull4_Auto", "PitBull4_Hardcoded", "PitBull4_Portraits", "ElvUI", "SUF", "Gladius", "GladiusEx", "sArena" }
 
 -------------------------------------------------------------------------------
 -- Default settings
