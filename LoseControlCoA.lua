@@ -383,6 +383,53 @@ local spellIdsForCoA = {
 	[803531] = "Silence",	  -- Deathmatch (SILENCE) -- banish self and target for 6s on 1 min cd
 }
 
+local interruptIdsForCoA = {
+	-- Bloodmage
+	[806099] = "Interrupt", -- Aneurysm -- cs for 4s, on 24s cd
+
+  -- Cultist
+	[804056] = "Interrupt", -- Crushing Dissonance -- aoe cs for 2s, on 30s cd
+
+  -- Felsworn
+	[800203] = "Interrupt", -- Fel Break -- cs for 3s, on 18s cd, has 0.5s cast time
+
+	-- Guardian
+	[500268] = "Interrupt", -- Bastion Slam -- cs for 0s?, on 25s cd
+	[704159] = "Interrupt", -- Shield of Denial -- cs for 3s, on 30s cd
+
+	-- Necromancer
+  [801739] = "Interrupt", -- Heartchill -- cs for 0s, but lower enemy ms and haste for 3s, on 30s cd
+
+  -- Pyromancer
+	[800808] = "Interrupt", -- Spellburn -- cs for 5s, on 25s cd
+
+  -- Reaper
+	[806125] = "Interrupt", -- Siphon Essence -- cs for 3s, on 20s cd
+	[807737] = "Interrupt", -- Siphon Essence -- cs for 3s, on 20s cd
+	[807738] = "Interrupt", -- Siphon Essence -- cs for 3s, on 20s cd
+	[807739] = "Interrupt", -- Siphon Essence -- cs for 3s, on 20s cd
+	[807740] = "Interrupt", -- Siphon Essence -- cs for 3s, on 20s cd
+
+  -- Runemaster
+	[800995] = "Interrupt", -- Ley Lock -- cs for 2.5s, on 6s cd, has 0.5s cast time
+
+	-- Starcaller
+	[805432] = "Interrupt", -- Halt -- cs for 3s, on 15s cd -- OBSOLETE?
+
+	-- Stormbringer
+	[500932] = "Interrupt", -- Gust of Wind -- cs for 5s, on 35s cd
+
+	-- Venomancer
+	[805096] = "Interrupt", -- Nullifying Toxin -- cs for 3s, on 16s cd
+
+	-- Witch Doctor
+	-- [806294] = "Interrupt", -- Spirit Shock -- cs until cancelled, on 24s cd -- OBSOLETE -- DEPRECATED
+	-- Spirit Shock is now a 4s SILENCE vs players, and 4s cs interrupt vs NPCs
+
+	-- Witch Hunter
+	[804432] = "Interrupt", -- Guard Strike -- cs for 3s, on 18s cd
+}
+
 -- Merge the CoA abilities into the main spellIds table so a single lookup
 -- table covers both WotLK and Conquest of Azeroth. (CoA IDs are 500000+ and
 -- never collide with the original sub-70000 IDs, so nothing is overwritten.)
