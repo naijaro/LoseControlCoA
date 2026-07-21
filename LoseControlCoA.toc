@@ -1,7 +1,7 @@
 ## Interface: 30300
 ## Title: LoseControlCoA
 ## Author: MaxQuest/Naijaro (based on LoseControl by Kouri)
-## Version: 3.34
+## Version: 3.35
 ## Notes: Displays the duration of CC effects on your character. Adapted for Ascension WoW Conquest of Azeroth (21 new classes and abilities).
 ## Notes-deDE: Zeigt die Dauer der CC-Effekte auf Ihren Buchstaben an
 ## Notes-esES: Exhibe la duración de los efectos del CC sobre su carácter
