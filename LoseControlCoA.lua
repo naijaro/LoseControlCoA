@@ -349,7 +349,18 @@ local spellIdsForCoA = {
 	[806173] = "CC",	      -- Drill Smash (STUN) -- 4s stun, on 30s cd
 
 	-- Venomancer
-	[504335] = "Snare",	    -- Web Wrap (STUN)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase)
+	[504335] = "CC",	      -- Web Wrap (STUN)    -- 5s stun, on 1 min cd
+	[800876] = "Snare",	    -- Web Wrap (SLOW)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase), rank1
+	[502881] = "Snare",	    -- Web Wrap (SLOW)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase), rank2
+	[502882] = "Snare",	    -- Web Wrap (SLOW)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase), rank3
+	[502883] = "Snare",	    -- Web Wrap (SLOW)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase), rank4
+	[502884] = "Snare",	    -- Web Wrap (SLOW)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase), rank5
+	[502885] = "Snare",	    -- Web Wrap (SLOW)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase), rank6
+	[502886] = "Snare",	    -- Web Wrap (SLOW)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase), rank7
+	[502887] = "Snare",	    -- Web Wrap (SLOW)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase), rank8
+	[502888] = "Snare",	    -- Web Wrap (SLOW)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase), rank9
+
+
 	[504362] = "CC",	      -- Fungify (CHARM)    -- mix of Mind Control and succubus' Seduction, but 1.5s cast instead of channel -- OBSOLETE?
 	[502890] = "Root",      -- Spindlebind (ROOT) -- 4s root on 16s cd
 	[502891] = "Root",      -- Spindlebind (ROOT)
