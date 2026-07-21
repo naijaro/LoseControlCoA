@@ -431,19 +431,64 @@ end
 -- PitBull4 names its unit frames "PitBull4_Frames_<LocalizedUnitName>", where the
 -- localized name comes from AceLocale. Every step is guarded, so a missing lib,
 -- missing locale, or missing entry can never raise (no nil concatenation).
-local function PitBull4Frame(localeKey, wantPortrait)
+-- Look up a PitBull4 AceLocale string (e.g. localized "Player"/"Party"), fully
+-- guarded so a missing lib/locale/entry can never raise (no nil concatenation).
+local function pb4Locale(key)
+	if type(LibStub) ~= "table" then return nil end -- LibStub is a callable table
+	local AceLocale = LibStub("AceLocale-3.0", true)
+	if type(AceLocale) ~= "table" then return nil end
+	local ok, L = pcall(AceLocale.GetLocale, AceLocale, "PitBull4", true)
+	if not ok or type(L) ~= "table" then return nil end
+	local ok2, s = pcall(function() return L[key] end)
+	if ok2 and type(s) == "string" then return s end
+	return nil
+end
+
+-- Return a frame's portrait sub-element if wanted and present, else the frame.
+local function pb4pick(f, wantPortrait)
+	if type(f) ~= "table" then return nil end
+	if wantPortrait and type(f.Portrait) == "table" then return f.Portrait end
+	return f
+end
+
+-- Resolve a PitBull4 singleton frame (player/target/focus). Builds differ: some
+-- name frames by the lowercase unit token (Pitbull4_Frames_player, as on this
+-- client), others by the capitalized localized label (PitBull4_Frames_Player).
+-- Probe both prefixes and both forms; first existing frame wins.
+local function PitBull4Frame(localeKey, token, wantPortrait)
 	return function()
-		if type(LibStub) ~= "table" then return nil end -- LibStub is a callable table, not a function
-		local AceLocale = LibStub("AceLocale-3.0", true)
-		if type(AceLocale) ~= "table" then return nil end
-		local ok, L = pcall(AceLocale.GetLocale, AceLocale, "PitBull4", true)
-		if not ok or type(L) ~= "table" then return nil end
-		local ok2, unitName = pcall(function() return L[localeKey] end)
-		if not ok2 or type(unitName) ~= "string" then return nil end
-		local f = _G["PitBull4_Frames_" .. unitName]
-		if type(f) ~= "table" then return nil end
-		if wantPortrait and type(f.Portrait) == "table" then return f.Portrait end
-		return f
+		local names = { "Pitbull4_Frames_" .. token, "PitBull4_Frames_" .. token }
+		local label = pb4Locale(localeKey)
+		if label then
+			names[#names + 1] = "PitBull4_Frames_" .. label
+			names[#names + 1] = "Pitbull4_Frames_" .. label
+		end
+		for _, n in ipairs(names) do
+			local hit = pb4pick(_G[n], wantPortrait)
+			if hit then return hit end
+		end
+		return nil
+	end
+end
+
+-- Resolve a PitBull4 party group frame (Pitbull4_Groups_PartyUnitButtonN on this
+-- client). Probe both prefixes plus the localized group-label variant.
+local function PitBull4GroupFrame(index, wantPortrait)
+	return function()
+		local names = {
+			"Pitbull4_Groups_PartyUnitButton" .. index,
+			"PitBull4_Groups_PartyUnitButton" .. index,
+		}
+		local party = pb4Locale("Party")
+		if party then
+			names[#names + 1] = "PitBull4_Groups_" .. party .. "UnitButton" .. index
+			names[#names + 1] = "Pitbull4_Groups_" .. party .. "UnitButton" .. index
+		end
+		for _, n in ipairs(names) do
+			local hit = pb4pick(_G[n], wantPortrait)
+			if hit then return hit end
+		end
+		return nil
 	end
 end
 
@@ -527,9 +572,13 @@ local anchors = {
 	--                frame creation order (player, target, focus, party1-4); if you
 	--                reconfigure PitBull4 frames these indices may shift.
 	PitBull4_Auto = {
-		player = PitBull4Frame("Player", true),
-		target = PitBull4Frame("Target", true),
-		focus  = PitBull4Frame("Focus",  true),
+		player = PitBull4Frame("Player", "player", true),
+		target = PitBull4Frame("Target", "target", true),
+		focus  = PitBull4Frame("Focus",  "focus",  true),
+		party1 = PitBull4GroupFrame(1, true),
+		party2 = PitBull4GroupFrame(2, true),
+		party3 = PitBull4GroupFrame(3, true),
+		party4 = PitBull4GroupFrame(4, true),
 	},
 	PitBull4_Hardcoded = {
 		player = "Pitbull4_Frames_player",
