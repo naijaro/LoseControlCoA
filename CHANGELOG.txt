@@ -1,0 +1,61 @@
+LoseControlCoA - Changelog
+==========================
+
+An adaptation of LoseControl (originally by Kouri; GPLv3 fork by millanzarreta)
+for Ascension WoW: Conquest of Azeroth. Also runs on standard WotLK 3.3.5 and
+Ascension Bronzebeard.
+
+
+[3.3.5] - 2026-07-21
+--------------------
+Added:
+  - PitBull4 anchoring is now three separate, selectable profiles:
+      * PitBull4_Auto      - automatic frame-name detection.
+      * PitBull4_Hardcoded - fixed frame names verified in-game (incl. party1-4).
+      * PitBull4_Portraits - anchors directly onto the 3D portrait models.
+  - Party-frame support (party1-4) added to PitBull4_Auto.
+
+Changed:
+  - PitBull4_Auto now resolves frames by probing multiple naming conventions
+    (lowercase "Pitbull4_..." and capitalized/localized "PitBull4_..."), so it
+    works across PitBull4 builds - including clients that use the lowercase
+    prefix - instead of only the localized form.
+
+
+[3.3.4] - 2026-07-20
+--------------------
+Project:
+  - Forked from LoseControl and adapted for Conquest of Azeroth as LoseControlCoA.
+  - Relicensed under the GNU General Public License v3, matching the upstream
+    GPLv3 fork; original credit to Kouri retained.
+  - Renamed the addon and fixed it to load under the new name: the loaded-file
+    reference, the internal name identifier, the gloss texture path, and the
+    slash-command token. The /lc and /losecontrol commands are unchanged.
+  - Updated the .toc metadata (title, author, website, credits, license).
+  - Bundled LibStub (loaded from the .toc) for PitBull4 detection.
+
+Added:
+  - Conquest of Azeroth crowd-control database: 139 spells drawn from the 21 CoA
+    classes (Necromancer, Chronomancer, Bloodmage, Venomancer, Starcaller,
+    Ranger, Reaper, Tinker, Primalist, Witch Doctor, Witch Hunter, and others),
+    grouped by class and mapped onto the existing CC / Silence / Root / Disarm
+    categories.
+  - Unit-frame anchor support beyond the original Blizzard / Perl / X-Perl:
+      * PitBull4, ElvUI, ShadowedUnitFrames (SUF)
+      * Gladius, GladiusEx, sArena (arena / party class-icon frames)
+  - The anchor options dropdown now lists every supported profile automatically.
+
+Fixed / Hardened:
+  - New anchor resolver is fail-safe: a missing addon, frame, or portrait
+    resolves to nil and the icon falls back to the screen centre rather than
+    throwing an error.
+  - Draw-layer and parent-frame calls are guarded, so anchoring to whole frames
+    or 3D portrait models (which lack texture-only methods) no longer errors.
+  - Corrected the LibStub type check (LibStub is a callable table, not a
+    function) so PitBull4 detection works.
+
+
+Earlier
+-------
+Based on LoseControl 3.33 (WotLK) by Kouri, via the GPLv3 fork by millanzarreta.
+See the upstream projects for their history.
