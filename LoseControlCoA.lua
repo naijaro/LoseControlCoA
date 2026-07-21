@@ -396,7 +396,7 @@ for k, v in pairs(spellIds) do
 	if name then
 		abilities[name] = v
 	else -- Thanks to inph for this idea. Keeps things from breaking when Blizzard changes things.
-		log(L .. " unknown spellId: " .. k)
+		-- log(L .. " unknown spellId: " .. k)
 	end
 	-- If GetSpellInfo returns nil, this spellId does not exist on the current
 	-- client (e.g. a Conquest of Azeroth spell on a WotLK/Bronzebeard realm, or
