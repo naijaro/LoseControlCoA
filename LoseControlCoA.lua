@@ -220,15 +220,6 @@ local spellIdsForCoA = {
 	[805114] = "CC",	      -- Mass Nightmare (HORROR)  -- 5s aoe horror, on 3 min cd
 
 	-- Felsworn
-	[503142] = "Root",      -- Hellhaul (ROOT)
-	[503143] = "Root",      -- Hellhaul (ROOT)
-	[503144] = "Root",      -- Hellhaul (ROOT)
-	[503145] = "Root",      -- Hellhaul (ROOT)
-	[503146] = "Root",      -- Hellhaul (ROOT)
-	[503147] = "Root",      -- Hellhaul (ROOT)
-	[503148] = "Root",      -- Hellhaul (ROOT)
-	[804168] = "CC",        -- Hellbound Leash (CHARM)
-
 	[560284] = "CC",        -- Infernal (HORROR) -- 3-4s aoe horror, on 45s cd
 	[704371] = 'Slow',      -- Cripple (SLOW) -- slow ms and casting speed by 60%, decaying over 12 sec, no cd
 	[805235] = "CC",        -- Whispers of the Pit (FEAR) -- 8s aoe fear, on 1 min cd
@@ -243,7 +234,7 @@ local spellIdsForCoA = {
 	[802304] = "Root",	    -- Net Throw (ROOT) -- 4s root on 20s cd
 
 	-- Knight of Xoroth
-	[503361] = "Silence",   -- Chainwhip (SILENCE)
+	[503361] = "Silence",   -- Chainwhip (SILENCE)      -- 2s silence, on 20s cd
 	[503362] = "Silence",   -- Chainwhip (SILENCE)
 	[503363] = "Silence",   -- Chainwhip (SILENCE)
 	[503364] = "Silence",   -- Chainwhip (SILENCE)
@@ -251,11 +242,19 @@ local spellIdsForCoA = {
 	[503366] = "Silence",   -- Chainwhip (SILENCE)
 	[503367] = "Silence",   -- Chainwhip (SILENCE)
 	[800081] = "Silence",   -- Chainwhip (SILENCE)
-	[803185] = "CC",        -- Chains of Malice (STUN)  -- 5s stun on 1 min cd
+	[503142] = "Root",      -- Hellhaul (ROOT)          -- 5s dragging root, on 3 min cd
+	[503143] = "Root",      -- Hellhaul (ROOT)
+	[503144] = "Root",      -- Hellhaul (ROOT)
+	[503145] = "Root",      -- Hellhaul (ROOT)
+	[503146] = "Root",      -- Hellhaul (ROOT)
+	[503147] = "Root",      -- Hellhaul (ROOT)
+	[503148] = "Root",      -- Hellhaul (ROOT)
+	[804168] = "CC",        -- Hellbound Leash (CHARM)  -- 5min (8s vs players) charm bidding leash, on 1 min cd, with 3s cast time
+	[803185] = "CC",        -- Chains of Malice (STUN)  -- 5s dragging stun, on 1 min cd
 
 	-- Necromancer
-	[500326] = "Root",      -- Bonefreeze (ROOT) (Freeze in place)
-	[500341] = "CC",	      -- Entomb (DISORIENT)
+	[500326] = "Root",      -- Bonefreeze (ROOT) -- 8s aoe root, on 40s cd?
+	[500341] = "CC",	      -- Entomb (BANISH) -- 4s banish, on 1 min cd
 	[800706] = "CC",        -- Ghoulify (FEAR)
 	[803741] = "CC",        -- Mass Grave (FEAR)
 	[280475] = "CC",        -- Mass Grave (FEAR)
@@ -275,14 +274,14 @@ local spellIdsForCoA = {
 	[800145] = "CC",	      -- Grip (INCAP) -- 8s incapacitate, 1.5s cast
 
 	-- Pyromancer
-	[535505] = "Root",	    -- Cindergrip (ROOT)  -- 1.5s cast root
+	[535505] = "Root",	    -- Cindergrip (ROOT)  -- 8s root, with 1.5s cast time
 	[535506] = "Root",	    -- Cindergrip (ROOT)
 	[535507] = "Root",	    -- Cindergrip (ROOT)
 	[535508] = "Root",	    -- Cindergrip (ROOT)
 	[805476] = "Root",	    -- Cindergrip (ROOT)  -- effect?
 
-	[806148] = "CC",        -- Gaze of Ysera (SLEEP)
-	[502088] = "CC",        -- Petrifying Visage (HORROR)  -- 3s stunning horror on 2 min cd
+	[806148] = "CC",        -- Gaze of Ysera (SLEEP) -- 8s sleep
+	[502088] = "CC",        -- Petrifying Visage (HORROR)  -- 3s stunning horror, on 2 min cd
 	[502089] = "CC",        -- Petrifying Visage (HORROR)
 	[502090] = "CC",        -- Petrifying Visage (HORROR)
 	[801908] = "CC",        -- Petrifying Visage (HORROR)
