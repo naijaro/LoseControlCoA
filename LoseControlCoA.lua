@@ -208,6 +208,7 @@ local spellIdsForCoA = {
 	[280795] = "Disarm",    -- Desynchronization (DISARM)
 	[561310] = "Disarm",    -- Desynchronization (DISARM)
 	[706056] = "CC",        -- Slipstream (BANISH)
+	[706969] = "Slow",      -- Chronostasis (SLOW) -- 8s slow for -60% ms, 3 charges, with 10s recharge time
 	[801280] = "CC",        -- Buy Time (STUN) -- 10s aoe stun on 2 min cd -- OBSOLETE!
 	[804461] = "CC",	      -- Babify (POLY)
 	[805162] = "CC",        -- Breath of Time (INCAP) -- 3s incapacitate on 30s cd -- OBSOLETE?
@@ -337,6 +338,7 @@ local spellIdsForCoA = {
 	[707905] = "CC",	      -- Storm Alert (FEAR) -- 8s fear with 1.8s cast
 	[707906] = "CC",	      -- Storm Alert (FEAR) -- 8s fear with 1.7s cast
 	[801871] = "Root",	    -- Thunder Prison Unused (ROOT)
+	[804419] = "CC",	      -- Stasis (INCAP)     -- 8s incapacitate, instant, on 1 min cd
 
 	-- Sun Cleric
 	[805583] = "CC",        -- Glare (STUN)   -- 5s aoe stun on 2 min cd
@@ -376,11 +378,13 @@ local spellIdsForCoA = {
 	[804967] = "Root",	    -- Venocannon (ROOT) -- self root on 1 min cd -- OBSOLETE?
 
 	-- Witch Doctor
-	[803678] = "Silence",   -- Malignant Jinx (SILENCE)
+	[802065] = "Snare",     -- Lethargy Jinx (SLOW) -- 50% ms slow for 10s, (75% with Shadow Enchantments)
+	[803678] = "Silence",   -- Malignant Jinx (SILENCE) -- 5s curse that causes target's next spell cast to silence them for 5s
 	[803732] = "Silence",   -- Malignant Jinx (SILENCE)
 	[280056] = "Silence",   -- Malignant Jinx (SILENCE)
 	[500952] = "CC",        -- Amphibimorph (POLY)
 	[801665] = "Root",      -- Big Bad Voodoo (ROOT)
+	[801678] = "CC",        -- Stasis Ward (STUN) -- 4s aoe stun with 2s delay, on 1 min cd
 
 	-- Witch Hunter
   [500089] = "Silence",   -- Subjugate (SILENCE) -- 4s silence and 40% ms slow, on 1 min cd
