@@ -218,7 +218,6 @@ local spellIdsForCoA = {
 	[560110] = "CC",        -- Madness (FEAR)
 	[560963] = "CC",        -- Shackle The Unrepentant (BANISH)
 	[805114] = "CC",	      -- Mass Nightmare (HORROR)  -- 5s aoe horror, on 3 min cd
-	[805235] = "CC",        -- Whispers of the Pit (FEAR)
 
 	-- Felsworn
 	[503142] = "Root",      -- Hellhaul (ROOT)
@@ -229,6 +228,10 @@ local spellIdsForCoA = {
 	[503147] = "Root",      -- Hellhaul (ROOT)
 	[503148] = "Root",      -- Hellhaul (ROOT)
 	[804168] = "CC",        -- Hellbound Leash (CHARM)
+
+	[560284] = "CC",        -- Infernal (HORROR) -- 3-4s aoe horror, on 45s cd
+	[704371] = 'Slow',      -- Cripple (SLOW) -- slow ms and casting speed by 60%, decaying over 12 sec, no cd
+	[805235] = "CC",        -- Whispers of the Pit (FEAR) -- 8s aoe fear, on 1 min cd
 
 	-- Guardian
 	[501546] = "CC",        -- Battle Rush (STUN)  -- charge with 1s stun on 30s cd
@@ -359,7 +362,6 @@ local spellIdsForCoA = {
 	[502886] = "Snare",	    -- Web Wrap (SLOW)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase), rank7
 	[502887] = "Snare",	    -- Web Wrap (SLOW)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase), rank8
 	[502888] = "Snare",	    -- Web Wrap (SLOW)    -- 4s channeled ms slow on 20s cd (plus 30% dmg increase), rank9
-
 
 	[504362] = "CC",	      -- Fungify (CHARM)    -- mix of Mind Control and succubus' Seduction, but 1.5s cast instead of channel -- OBSOLETE?
 	[502890] = "Root",      -- Spindlebind (ROOT) -- 4s root on 16s cd
